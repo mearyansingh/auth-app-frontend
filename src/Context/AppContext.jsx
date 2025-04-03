@@ -11,6 +11,7 @@ export const AppContextProvider = ({ children }) => {
     const serverUrl = import.meta.env.VITE_SERVER_URL;
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [userData, setUserData] = useState(null)
+    console.log(serverUrl, "ll")
 
     useEffect(() => {
         getAuthState()
