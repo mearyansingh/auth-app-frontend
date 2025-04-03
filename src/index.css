@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+:root {
+    --bd-accent-rgb: 255, 228, 132;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+    --bd-pink-rgb: 254, 51, 132;
+}
+
+* {
+    font-family: "Outfit", sans-serif;
+}
+
+main {
+    background-image: linear-gradient(180deg, rgba(var(--bs-body-bg-rgb), 0.01), rgba(var(--bs-body-bg-rgb), 1) 85%), radial-gradient(ellipse at top left, rgba(var(--bs-primary-rgb), 0.5), transparent 50%), radial-gradient(ellipse at top right, rgba(var(--bd-accent-rgb), 0.5), transparent 50%), radial-gradient(ellipse at center right, rgba(var(--bd-violet-rgb), 0.5), transparent 50%), radial-gradient(ellipse at center left, rgba(var(--bd-pink-rgb), 0.5), transparent 50%);
+    padding: 3rem 0;
+}
+
+footer {
+    background-image: url('./assets/footer-waves.svg');
+    background-size: cover;
+    background-position: center bottom -200px;
+    background-repeat: no-repeat;
+    height: 80px;
+    width: 100%;
+}
+
+.feature-icon-small {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Loading */
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: fit-content;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 30px;
+    background: radial-gradient(circle closest-side, #000 94%, #0000) right/calc(200% - 1em) 100%;
+    animation: l24 1s infinite alternate linear;
+}
+
+.loader::before {
+    content: "Loading...";
+    line-height: 1em;
+    color: #0000;
+    background: inherit;
+    background-image: radial-gradient(circle closest-side, #fff 94%, #000);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+@keyframes l24 {
+    100% {
+        background-position: left
+    }
+}
