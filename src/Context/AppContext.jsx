@@ -36,7 +36,6 @@ export const AppContextProvider = ({ children }) => {
                 toast.error(data.message || 'Not authorized')
             }
         } catch (error) {
-            console.error('Auth error:', error)
             toast.error(error.message)
         }
     }
