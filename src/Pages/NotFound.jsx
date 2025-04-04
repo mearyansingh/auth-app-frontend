@@ -1,8 +1,6 @@
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import Loader from '../Components/Loader'
-
 function NotFound() {
     return (
         <section className="py-3 py-md-5 d-flex justify-content-center align-items-center">

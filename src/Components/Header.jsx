@@ -3,16 +3,17 @@ import { Button, Offcanvas, Navbar, Nav, Container, Dropdown } from 'react-boots
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import useAppContext from '../Hooks/useAppContext';
+import { getBaseUrl } from "../Helpers";
 
 function Header() {
 	// context
-	const { userData, serverUrl, setUserData, setIsLoggedIn } = useAppContext();
+	const { userData, setUserData, setIsLoggedIn } = useAppContext();
 	const navigate = useNavigate()
 
 	const handleLogout = async () => {
 		try {
 			axios.defaults.withCredentials = true
-			const { data } = await axios.post(`${serverUrl}/api/auth/logout`)
+			const { data } = await axios.post(`${getBaseUrl()}/api/auth/logout`)
 			if (data.success) {
 				data.success && setIsLoggedIn(false)
 				data.success && setUserData(null)
@@ -29,7 +30,7 @@ function Header() {
 	const sendVerificationOtp = async () => {
 		try {
 			axios.defaults.withCredentials = true
-			const { data } = await axios.post(`${serverUrl}/api/auth/send-verify-otp`)
+			const { data } = await axios.post(`${getBaseUrl()}/api/auth/send-verify-otp`)
 			if (data.success) {
 				navigate('/email-verify')
 				toast.success(data.message)
@@ -50,12 +51,12 @@ function Header() {
 				</Link>
 				{userData ?
 					<Dropdown>
-						<Dropdown.Toggle as={Button} variant="link" id="dropdown-basic" className="d-block bg-light link-body-emphasis text-decoration-none">
-							{userData?.name[0].toUpperCase()}
+						<Dropdown.Toggle as={Button} variant="link" id="dropdown-basic" className="d-inline-flex align-items-center justify-content-center text-light text-decoration-none">
+							<span className="text-black-50 bg-light d-flex rounded-circle justify-content-center align-items-center me-1 fs-3" style={{ width: '50px', height: '50px' }}>{userData?.name[0].toUpperCase()}</span>
 						</Dropdown.Toggle>
 						<Dropdown.Menu className="border-0">
 							{!userData.isAccountVerified &&
-								<Dropdown.Item variant="outline-light" type="button" size='lg' onClick={sendVerificationOtp} className='rounded-pill'>Verify Email</Dropdown.Item>
+								<Dropdown.Item type="button" onClick={sendVerificationOtp}>Verify Email</Dropdown.Item>
 							}
 							<Dropdown.Item type="button" onClick={handleLogout} >Logout</Dropdown.Item>
 						</Dropdown.Menu>

@@ -5,12 +5,13 @@ import { toast } from 'react-toastify'
 import useAppContext from '../Hooks/useAppContext'
 import { AppContext } from '../Context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import { getBaseUrl } from '../Helpers'
 
 function EmailVerify() {
     //it will add the cookie to the request
     axios.defaults.withCredentials = true;
     const navigate = useNavigate()
-    const { serverUrl, isLoggedIn, userData, fetchUserData } = useAppContext()
+    const { isLoggedIn, userData, fetchUserData } = useAppContext()
 
     const inputRefs = useRef([])
 
@@ -48,7 +49,7 @@ function EmailVerify() {
         try {
             const otpArray = inputRefs.current.map(e => e.value)
             const otp = otpArray.join('');
-            const { data } = await axios.post(`${serverUrl}/api/auth/verify-account`, { otp })
+            const { data } = await axios.post(`${getBaseUrl()}/api/auth/verify-account`, { otp })
             if (data.success) {
                 toast.success(data.message)
                 fetchUserData()

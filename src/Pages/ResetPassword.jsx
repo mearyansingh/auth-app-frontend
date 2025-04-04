@@ -4,12 +4,13 @@ import { Button, Card, Col, FloatingLabel, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import useAppContext from '../Hooks/useAppContext';
 import { toast } from 'react-toastify';
+import { getBaseUrl } from '../Helpers';
 
 function ResetPassword() {
    //it will add the cookie to the request
    axios.defaults.withCredentials = true;
    const navigate = useNavigate()
-   const { serverUrl, isLoggedIn, userData, fetchUserData } = useAppContext()
+   const { isLoggedIn, userData, fetchUserData } = useAppContext()
 
    const inputRefs = useRef([])
 
@@ -46,7 +47,7 @@ function ResetPassword() {
    const onSubmitEmail = async (e) => {
       e.preventDefault();
       try {
-         const { data } = await axios.post(`${serverUrl}/api/auth/send-reset-otp`, { email })
+         const { data } = await axios.post(`${getBaseUrl()}/api/auth/send-reset-otp`, { email })
          if (data.success) {
             setIsEmailSent(true)
             toast.success(data.message)
@@ -69,7 +70,7 @@ function ResetPassword() {
    const onSubmitNewPassword = async (e) => {
       e.preventDefault();
       try {
-         const { data } = await axios.post(`${serverUrl}/api/auth/reset-password`, { email, otp, newPassword })
+         const { data } = await axios.post(`${getBaseUrl()}/api/auth/reset-password`, { email, otp, newPassword })
          if (data.success) {
             toast.success(data.message)
             navigate('/login')

@@ -16,15 +16,6 @@ main {
     padding: 3rem 0;
 }
 
-footer {
-    background-image: url('./assets/footer-waves.svg');
-    background-size: cover;
-    background-position: center bottom -200px;
-    background-repeat: no-repeat;
-    height: 80px;
-    width: 100%;
-}
-
 .feature-icon-small {
     width: 3rem;
     height: 3rem;
