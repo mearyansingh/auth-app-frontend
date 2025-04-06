@@ -27,34 +27,51 @@ function Login() {
     }));
   };
 
+  axios.defaults.withCredentials = true; //send the cookies also
   // Handle Form Submission
   const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    const submissionData = state === 'sign-up' ? formData : { email: formData.email, password: formData.password };
     try {
-      e.preventDefault();
-      const submissionData = state === 'sign-up' ? formData : { email: formData.email, password: formData.password };
-      axios.defaults.withCredentials = true; //send the cookies also
+      let response;
       if (state === 'sign-up') {
-        const { data } = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData)
-        if (data.success) {
-          setIsLoggedIn(true)
-          fetchUserData()
-          navigate('/')
-          toast.success('Sign Up Successful!');
-        } else {
-          toast.error(data.message);
-        }
+        response = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData);
       } else {
-        const { data } = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData)
-        if (data.success) {
-          setIsLoggedIn(true)
-          fetchUserData()
-          navigate('/')
-          toast.success(data.message);
-        } else {
-          toast.error(data.message);
-        }
+        response = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData);
       }
+      const { data } = response;
+      if (data.success) {
+        setIsLoggedIn(true);
+        fetchUserData();
+        navigate('/');
+        toast.success(state === 'sign-up' ? 'Sign Up Successful!' : 'Login Successful!');
+      } else {
+        toast.error(data.message);
+      }
+      // if (state === 'sign-up') {
+      //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData)
+      //   if (data.success) {
+      //     setIsLoggedIn(true)
+      //     fetchUserData()
+      //     navigate('/')
+      //     toast.success('Sign Up Successful!');
+      //   } else {
+      //     toast.error(data.message);
+      //   }
+      // } else {
+      //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData)
+      //   if (data.success) {
+      //     setIsLoggedIn(true)
+      //     fetchUserData()
+      //     navigate('/')
+      //     toast.success(data.message);
+      //   } else {
+      //     toast.error(data.message);
+      //   }
+      // }
     } catch (error) {
+      // Log the error for debugging
+      console.error(`Error during ${state === 'sign-up' ? 'Sign Up' : 'Login'} submission:`, error);
       toast.error(error.message);
     }
   };
