@@ -1,14 +1,19 @@
-import { useContext, useState } from 'react'
-import { Card, Form, FloatingLabel, Col, Button } from 'react-bootstrap'
-import axios from 'axios'
+import { useContext, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { AppContext } from '../Context/AppContext.jsx'
-import { getBaseUrl } from '../Helpers/index.js'
+import { Card, Form, FloatingLabel, Col, Button, Spinner } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLoginMutation, useRegisterMutation, useFetchUserDataQuery } from '../slices/usersApiSlice.js'
+import { setCredentials } from '../slices/authSlice.js'
+// import axios from 'axios'
+// import { AppContext } from '../Context/AppContext.jsx'
+// import { getBaseUrl } from '../Helpers/index.js'
 function Login() {
   //context 
-  const { setIsLoggedIn, fetchUserData } = useContext(AppContext)
+  // const { setIsLoggedIn, fetchUserData } = useContext(AppContext)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { userInfo } = useSelector(state => state.auth)
 
   // Toggle between Sign Up and Sign In
   const [state, setState] = useState('sign-up')
@@ -17,6 +22,9 @@ function Login() {
     email: '',
     password: '',
   })
+
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
 
   // Handle Input Change
   const handleChange = (e) => {
@@ -27,52 +35,76 @@ function Login() {
     }));
   };
 
-  axios.defaults.withCredentials = true; //send the cookies also
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [navigate, userInfo])
+
+  // axios.defaults.withCredentials = true; //send the cookies also
   // Handle Form Submission
+  // const onSubmitHandler = async (e) => {
+  //   e.preventDefault();
+  //   const submissionData = state === 'sign-up' ? formData : { email: formData.email, password: formData.password };
+  //   try {
+  //     let response;
+  //     if (state === 'sign-up') {
+  //       response = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData);
+  //     } else {
+  //       response = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData);
+  //     }
+  //     const { data } = response;
+  //     if (data.success) {
+  //       setIsLoggedIn(true);
+  //       fetchUserData();
+  //       toast.success(state === 'sign-up' ? 'Sign Up Successful!' : 'Login Successful!');
+  //       navigate('/');
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //     // if (state === 'sign-up') {
+  //     //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData)
+  //     //   if (data.success) {
+  //     //     setIsLoggedIn(true)
+  //     //     fetchUserData()
+  //     //     navigate('/')
+  //     //     toast.success('Sign Up Successful!');
+  //     //   } else {
+  //     //     toast.error(data.message);
+  //     //   }
+  //     // } else {
+  //     //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData)
+  //     //   if (data.success) {
+  //     //     setIsLoggedIn(true)
+  //     //     fetchUserData()
+  //     //     navigate('/')
+  //     //     toast.success(data.message);
+  //     //   } else {
+  //     //     toast.error(data.message);
+  //     //   }
+  //     // }
+  //   } catch (error) {
+  //     // Log the error for debugging
+  //     console.error(`Error during ${state === 'sign-up' ? 'Sign Up' : 'Login'} submission:`, error);
+  //     toast.error(error.message);
+  //   }
+  // };
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const submissionData = state === 'sign-up' ? formData : { email: formData.email, password: formData.password };
+    const payload = state === 'sign-up' ? { ...formData } : { email: formData.email, password: formData.password };
     try {
-      let response;
-      if (state === 'sign-up') {
-        response = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData);
-      } else {
-        response = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData);
-      }
-      const { data } = response;
-      if (data.success) {
-        setIsLoggedIn(true);
-        fetchUserData();
+      const res = state === 'sign-up' ? await register(payload).unwrap() : await login(payload).unwrap();
+      if (res?.success) {
+        dispatch(setCredentials(res.userData));
+        toast.success(state === 'sign-up' ? 'Registration successful!' : 'Login successful!');
         navigate('/');
-        toast.success(state === 'sign-up' ? 'Sign Up Successful!' : 'Login Successful!');
       } else {
-        toast.error(data.message);
+        toast.error(res.message);
       }
-      // if (state === 'sign-up') {
-      //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/register`, submissionData)
-      //   if (data.success) {
-      //     setIsLoggedIn(true)
-      //     fetchUserData()
-      //     navigate('/')
-      //     toast.success('Sign Up Successful!');
-      //   } else {
-      //     toast.error(data.message);
-      //   }
-      // } else {
-      //   const { data } = await axios.post(`${getBaseUrl()}/api/auth/login`, submissionData)
-      //   if (data.success) {
-      //     setIsLoggedIn(true)
-      //     fetchUserData()
-      //     navigate('/')
-      //     toast.success(data.message);
-      //   } else {
-      //     toast.error(data.message);
-      //   }
-      // }
-    } catch (error) {
-      // Log the error for debugging
-      console.error(`Error during ${state === 'sign-up' ? 'Sign Up' : 'Login'} submission:`, error);
-      toast.error(error.message);
+    } catch (err) {
+      const msg = err?.data?.message || err?.error;
+      toast.error(msg);
     }
   };
 
@@ -135,8 +167,23 @@ function Login() {
                     Forgot password?
                   </Link>
                 )}
-                <Button type="submit" size='lg' variant='outline-dark' className='px-4 rounded-pill align-items-center mx-auto icon-link icon-link-hover'>
-                  {state === 'sign-up' ? 'Sign Up' : 'Login'}<i className="lh-1 bi bi-arrow-right fs-4" />
+                <Button
+                  type="submit"
+                  size='lg'
+                  variant='outline-dark'
+                  className='px-4 rounded-pill align-items-center mx-auto icon-link icon-link-hover'
+                  disabled={isLoginLoading || isRegisterLoading}
+                >
+                  {(isLoginLoading || isRegisterLoading) ? (
+                    <>
+                      <Spinner animation="border" size="sm" role="status" className="me-2" aria-hidden="true" />
+                      {state === 'sign-up' ? 'Signing in...' : 'Login...'}
+                    </>
+                  ) : (
+                    <>
+                      {state === 'sign-up' ? 'Sign Up' : 'Login'}<i className="lh-1 bi bi-arrow-right fs-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             </Form>

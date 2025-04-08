@@ -19,10 +19,11 @@ export const AppContextProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const { data } = await axios.get(`${getBaseUrl()}/api/user/data`)
+            const { data } = await axios.get(`${getBaseUrl()}/api/user/profile`)
             data.success ? setUserData(data.userData) : toast.error(data.message)
         } catch (error) {
-            toast.error(error.message)
+            const msg = error?.response?.data?.message || error.message;
+            toast.error(msg)
         }
     }
 
@@ -36,7 +37,8 @@ export const AppContextProvider = ({ children }) => {
                 toast.error(data.message || 'Not authorized')
             }
         } catch (error) {
-            toast.error(error.message)
+            const msg = error?.response?.data?.message || error.message || "Something went wrong";
+            toast.error(msg)
         }
     }
 
