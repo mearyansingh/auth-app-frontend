@@ -1,4 +1,4 @@
-![My Project Logo](/auth-app.svg)
+![My Project Logo](/public/auth-app.svg)
 
 # Auth App  
 #### MERN Stack Authentication App
