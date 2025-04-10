@@ -28,8 +28,9 @@ function Header() {
       } else {
         toast.error(res.message);
       }
-    } catch (error) {
-      toast.error(error?.data?.message || "Failed to send verification email!");
+    } catch (err) {
+      const msg = err?.data?.message || err?.error;
+      toast.error(msg);
     }
   };
 

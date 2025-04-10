@@ -92,12 +92,12 @@ function Profile() {
                 className='mb-4'
               />
               { }
-              <Badge bg={`${userInfo?.isAccountVerified ? 'success-subtle text-success' : 'danger-subtle text-danger'}`} className="position-absolute top-50 end-0 translate-middle">
-                <i className={`bi pe-1  ${userInfo?.isAccountVerified ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}`} />{`${userInfo?.isAccountVerified ? 'Email verified' : 'Email not verified'}`}
+              <Badge style={{ width: "30px", height: "30px" }} bg={`${userInfo?.isAccountVerified ? 'success-subtle text-success' : 'danger-subtle text-danger'}`} className="rounded-circle d-inline-flex align-items-center justify-content-center position-absolute top-50 p-3 end-0 translate-middle">
+                <i className={`bi fs-6 text-center  ${userInfo?.isAccountVerified ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}`} />
               </Badge>
             </FloatingLabel>
             {!userInfo?.isAccountVerified &&
-              <Alert variant="danger" className='text-start'>
+              <Alert variant="danger" className='text-start mb-4'>
                 <i className='bi bi-exclamation-triangle-fill fs-5 pe-1' />Your account is not verified. Please verify your email.
               </Alert>
             }
