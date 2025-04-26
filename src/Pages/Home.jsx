@@ -1,12 +1,12 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
-// import useAppContext from '../Hooks/useAppContext'
+import { Button, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 function Home() {
-  // const { userData } = useAppContext()
+
   const { userInfo } = useSelector(state => state.auth)
+
   return (
     <>
       <Col md={8} className="mx-auto text-center">
@@ -17,13 +17,15 @@ function Home() {
           Our authentication system is built for both convenience and security. Users can quickly sign up or log in, reset forgotten passwords with ease, and verify their identity through secure email confirmation. For added protection, OTP-based authentication ensures only the right person gets in. Whether you're a new user or returning, our access features make managing your account smooth, safe, and stress-free.
         </p>
         <div className="px-4 py-5">
-          <h2 className="pb-2 border-bottom text-start">MERN stack authentication app</h2>
+          {/* <h2 className="pb-2 border-bottom text-start">MERN stack authentication app</h2> */}
 
           <div className="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
             <div className="col d-flex flex-column align-items-start gap-2 text-start">
               <h2 className="fw-bold text-body-emphasis">Secure & Seamless User Access</h2>
               <p className="text-body-secondary">Empower your users with flexible, secure authentication options for effortless access and account management.</p>
-              <Link to="/login" className="btn btn-primary btn-lg">Explore Now</Link>
+
+              <Button as={Link} type='button' to="/room" size="lg" variant='outline-dark' className='rounded-pill'>Join Room</Button>
+
             </div>
             <div className="col">
               <div className="row row-cols-1 row-cols-sm-2 g-4">
